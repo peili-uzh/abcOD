@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="BlockingFramework">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/BlockingFramework.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jsoup-1.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mariadb-java-client-2.5.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/postgresql-9-1.2-1002.jdbc4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/secondstring-20030401.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

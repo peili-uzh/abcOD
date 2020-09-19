@@ -10,7 +10,7 @@ public class Test {
 	 */
 
 	private static String SQL =
-			"select id, date, title as release_1, catno, label as label_name from music.release where date NOT IN (' ', ' ', ' ', ' ') AND date IS NOT NULL  order by label, catno limit 1000000";
+			"select id, date, title as release_1, catno, label as label_name from music.music_release where date NOT IN (' ', ' ', ' ', ' ') AND date IS NOT NULL  order by label, catno limit 1000";
 
 	public static void main(String[] args) throws Exception {
 

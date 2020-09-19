@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
   <component name="EclipseModuleManager">
-    <libelement value="jar://$MODULE_DIR$/../../Music/music jar/BlockingFramework.jar!/" />
-    <libelement value="jar://$MODULE_DIR$/../../Music/music jar/postgresql-9-1.2-1002.jdbc4.jar!/" />
-    <libelement value="jar://$MODULE_DIR$/../../Music/music jar/secondstring-20030401.jar!/" />
-    <libelement value="jar://$MODULE_DIR$/../../Music/music jar/jsoup-1.6.2.jar!/" />
-    <libelement value="jar://$MODULE_DIR$/../../Music/music jar/mariadb-java-client-2.5.4.jar!/" />
+    <libelement value="file:///Users/Pei/Documents/Music/music jar/BlockingFramework.jar" />
+    <libelement value="file:///Users/Pei/Documents/Music/music jar/postgresql-9-1.2-1002.jdbc4.jar" />
+    <libelement value="file:///Users/Pei/Documents/Music/music jar/secondstring-20030401.jar" />
+    <libelement value="file:///Users/Pei/Documents/Music/music jar/jsoup-1.6.2.jar" />
+    <libelement value="file:///Users/Pei/Documents/Music/music jar/mariadb-java-client-2.5.4.jar" />
     <src_description expected_position="0">
       <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
     </src_description>
@@ -17,11 +17,11 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="JavaSE-1.6" jdkType="JavaSDK" />
     <orderEntry type="module-library">
       <library name="BlockingFramework.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Music/music jar/BlockingFramework.jar!/" />
+          <root url="file:///Users/Pei/Documents/Music/music jar/BlockingFramework.jar" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -30,7 +30,7 @@
     <orderEntry type="module-library">
       <library name="postgresql-9-1.2-1002.jdbc4.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Music/music jar/postgresql-9-1.2-1002.jdbc4.jar!/" />
+          <root url="file:///Users/Pei/Documents/Music/music jar/postgresql-9-1.2-1002.jdbc4.jar" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -39,7 +39,7 @@
     <orderEntry type="module-library">
       <library name="secondstring-20030401.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Music/music jar/secondstring-20030401.jar!/" />
+          <root url="file:///Users/Pei/Documents/Music/music jar/secondstring-20030401.jar" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -48,7 +48,7 @@
     <orderEntry type="module-library">
       <library name="jsoup-1.6.2.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Music/music jar/jsoup-1.6.2.jar!/" />
+          <root url="file:///Users/Pei/Documents/Music/music jar/jsoup-1.6.2.jar" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -57,11 +57,12 @@
     <orderEntry type="module-library">
       <library name="mariadb-java-client-2.5.4.jar">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../Music/music jar/mariadb-java-client-2.5.4.jar!/" />
+          <root url="file:///Users/Pei/Documents/Music/music jar/mariadb-java-client-2.5.4.jar" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="BlockingFramework" level="project" />
   </component>
 </module>
