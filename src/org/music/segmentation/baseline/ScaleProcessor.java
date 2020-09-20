@@ -1,8 +1,8 @@
 package org.music.segmentation.baseline;
 
+import org.music.abcod.Block;
+import org.music.abcod.Evaluation;
 import org.music.data.ReleaseLabel;
-import org.music.missingtime.Block;
-import org.music.missingtime.Evaluation;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

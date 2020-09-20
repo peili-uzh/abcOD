@@ -1,85 +1,18 @@
-package org.music.missingtime;
-
-import java.util.ArrayList;
+package org.music.abcod;
 
 import org.music.segmentation.baseline.ScaleProcessor;
+
+import java.util.ArrayList;
 
 public class Test {
 	/**
 	 * Discogs data
 	 */
 
-	private static String SQL = "select id, date, title as release, catno, label as label_name from music.release where date NOT IN (' ', '  ', '    ', '    ') order by label, catno limit 1000000";//
-	// private static String SQL = "select id, date, title as release, catno,
-	// label as label_name from music.release where (date <> ' ' AND date <> ' '
-	// AND date <> ' ' AND date <> ' ') order by label, catno limit 5000000";//
-	// private static String SQL = "select * from music.series where
-	// partition_id > 0 order by cluster_id, partition_id, date";
-	// "select catno, cluster_id, year as date, id, title as release,
-	// partition_id, label_name as label_name, id as release_id from
-	// full_series"
-	// + " where catno <> 'none' and catno <> 'NONE' and catno <> 'NONE1' and
-	// catno <> '' and catno IS NOT NULL order by cluster_id limit 500000";
-	// cluster_id = 1818 and
-
-	// private static String SQL = "select * from series order by cluster_id,
-	// partition_id, date";
-
-	// "select '' as new_date, '' as new_country, '' as new_title, '' as
-	// new_label, '' as new_catno, '' as new_format, r.id as release_id, r.*,
-	// r.title as release, '' as artist, l.catno, '' as format, '' as qty, '' as
-	// description, '' as extra_artist, l.label_name, d.id as cluster_id from
-	// discogs_release r, discogs_release_label l, discogs_label d where r.id =
-	// l.release_id and d.name = l.label_name";
-
-	private static String multiple = "select * from series where partition_id > 0 order by cluster_id, partition_id, date";
-	// "select * from series where partition_id in (24980793, 2883936, "
-	// + "35789577, 19614270, 5802602, 20940940, 37938757, 8382842, 19361636,
-	// 12467687, 26578866, "
-	// + "12551479, 32431645, 11658103, 10447172, 10447172, 25696741, 19577415)
-	// "
-	// + "order by cluster_id, partition_id, date";
-
-	private static String multiple1 = "select * from series where partition_id in (2883936, 35789577, 19614270, 5802602, 20940940"
-			+ ", 37938757) order by cluster_id, partition_id, date";
-
-	private static String simple1 = "select * from series where partition_id in (24980793) "
-			+ "order by cluster_id, partition_id, date";
-
-	private static String simple2 = "select * from series where partition_id in (24980793) "
-			+ "order by cluster_id, partition_id, date";
-
-	private static String single1 = "select * from series where partition_id in (8382842, 19361636, 12467687, 26578866, 12551479, "
-			+ "32431645, 11658103, 10447172, 10447172, 25696741, 19577415) order by cluster_id, partition_id, date";
-
-	private static String single2 = "select * from series where partition_id in (24980793, 8382842, "
-			+ "19361636, 12467687, 26578866, 12551479, 32431645, 11658103, 10447172, 10447172, 25696741, 19577415) "
-			+ "order by cluster_id, partition_id, date";
-
-	private static String random1 = "select * from series order by cluster_id, date limit 10000";
-
-	private static String random = "select * from series where partition_id != 0 order by cluster_id";
-
-	// private static String random = "select * from series where partition_id
-	// != 0 order by cluster_id limit 5000";
-
-	// "select * from series where partition_id in (24980793, 2883936, "
-	// + "35789577, 19614270, 5802602, 20940940, 37938757, 8382842, 19361636,
-	// 12467687, 26578866, "
-	// + "12551479, 32431645, 11658103, 10447172, 10447172, 25696741, 19577415,
-	// 5025263, 27437275, 15524216, 6879796, 26863565, 32431978, 28548023) "
-	// + "order by cluster_id, partition_id, date limit 100";
-			// + "order by cluster_id, partition_id, date limit 600";
-
-	// private static String single = "select * from series where partition_id
-	// in (5025263, 27437275, 15524216, 6879796, 26863565, 32431978, 28548023,
-	// 20162683, 4890393,"
-	// + "8382842) order by cluster_id, partition_id, date";
-
-	// private static String simple = "select * from series where partition_id
-	// in (33166737, 9347917, 5736236, 24484789, 37392920, 34810664,"
-	// + " 24980793, 23756261, 25245760, 15111397) " + "order by cluster_id,
-	// partition_id, date";
+	private static String SQL =
+			"select id, date, title as release_1, catno, label as label_name from music.music_release " +
+					"where (date NOT IN (' ', ' ', ' ', ' ') AND date IS NOT NULL) " +
+					"order by label, catno limit 200000";
 
 	public static void main(String[] args) throws Exception {
 
@@ -107,7 +40,7 @@ public class Test {
 		String data14 = "66051, 187104, 618377, 5034652";
 
 		// multiple series
-		String data31 = "20940940"; // 20940940 5802602
+		String data31 = "20940940,"; // 20940940 5802602
 		String data3 = "2883936, 35789577, 5802602, 20940940, 37938757,";
 
 		String data10 = "22499825, 14436114, 27310286,";
@@ -115,10 +48,10 @@ public class Test {
 
 		String data7 = "26590540, 14857043, 11813126, 34768053, 31645200, 38008530";
 
-		String sql = "select * from music.series where partition_id in (" // +
-																			// data3
+		String sql = "select * from music_series where partition_id in (" + data31
 
-				+ data11 + data2 + data4 + data5 + data6 + data8 + data9 + data14 + data3 + data10 + data12 + data7
+				+ data11 + data2 + data4 + data5 + data6 + data8 + data9 + data14
+				+ data3 + data10 + data12 + data7
 				+ ") order by cluster_id, partition_id, catno";
 
 		String sqlwithGroundTruth = "select * from series_with_ground_truth order by cluster_id, partition_id, date";
@@ -126,12 +59,73 @@ public class Test {
 		/**
 		 * Analyse series in sample data
 		 */
-		analyzeSeries(sql);
+		// analyzeSeries(sql);
 		/**
 		 * Analyse series in music full data
 		 */
-		analyzeSeries(SQL);
+		// analyzeSeries(SQL);
 
+		/***
+		 * test scalability
+		 *
+		 */
+		testScalability(SQL);
+
+	}
+
+	public static void testScalability(String sql) throws Exception {
+		PartitionProcessor parProcessor = new PartitionProcessor(sql, "releaselabel");
+		ArrayList dataset = parProcessor.getRelabels();
+		int totalSize = dataset.size();
+		int partition = 1;
+		int partitionSize = totalSize / partition;
+
+		// System.out.println("\t \t Gap \t LMB \t LMS \t MonoScale");
+		for (int d = 3; d <= 3; d++) {
+			int deltat = d;
+			int theta = 4;
+			for (int i = 0; i < partition; i++) {
+				int subSize = partitionSize * (i + 1);
+				ArrayList subDataSet = new ArrayList();
+				for (int j = 0; j < subSize; j++) {
+					subDataSet.add(subDataSet.size(), dataset.get(j));
+				}
+				// baseline: gap
+				double start = System.currentTimeMillis();
+				// System.out.println("gap:");
+//				parProcessor.partitionWithGap("releaselabel", subDataSet);
+				double endGAP = System.currentTimeMillis();
+				double gapTime = endGAP - start;
+				// System.out.println("Gap Runtime: \t" + gapTime);
+
+				// blocking
+				// System.out.println("Block:");
+				parProcessor.block("releaselabel", subDataSet);
+
+				System.out.println("subDataSet size \t" + subDataSet.size());
+				// System.out.println("LMB:");
+				double startLMB = System.currentTimeMillis();
+				parProcessor.series(deltat, theta);
+				double endLMB = System.currentTimeMillis();
+				double lmbTime = endLMB - startLMB;
+
+				System.out.println("LMB Runtime: \t" + lmbTime);
+
+				// System.out.println("LMS:");
+				// parProcessor.series(0, theta);
+				double endLMS = System.currentTimeMillis();
+				double lmsTime = endLMS - endLMB;
+				// System.out.println("LMS Runtime: \t" + lmsTime);
+
+				// System.out.println("MonoScale:");
+				// ScaleProcessor scaleProcessor = new
+				// ScaleProcessor(parProcessor.finaltimelists,parProcessor.finalreleaselists,
+				// deltat);
+				// scaleProcessor.process();
+				// double endScale = System.currentTimeMillis();
+				// double scaleTime = endScale - endLMS;
+			}
+		}
 	}
 
 	public static void main1(String[] args) throws Exception {
@@ -170,9 +164,9 @@ public class Test {
 
 		String sql = "select * from music.series where partition_id in (" + data31
 
-		// data11 + data2 + data4 + data5 + data6 + data8 + data9 + data14
+				// data11 + data2 + data4 + data5 + data6 + data8 + data9 + data14
 
-		// + data3 + data10 + data12 + data7
+				// + data3 + data10 + data12 + data7
 				+ ") order by cluster_id, partition_id, date";
 
 		String sqlwithGroundTruth = "select * from series_with_ground_truth order by cluster_id, partition_id, date";
@@ -220,10 +214,9 @@ public class Test {
 				double lmsTime = endLMS - endLMB;
 
 				// System.out.println("MonoScale:");
-				// ScaleProcessor scaleProcessor = new
-				// ScaleProcessor(parProcessor.finaltimelists,parProcessor.finalreleaselists,
-				// deltat);
-				// scaleProcessor.process();
+				ScaleProcessor scaleProcessor = new ScaleProcessor(parProcessor.finaltimelists,
+						parProcessor.finalreleaselists, deltat);
+				scaleProcessor.process();
 				// double endScale = System.currentTimeMillis();
 				// double scaleTime = endScale - endLMS;
 			}
@@ -253,28 +246,28 @@ public class Test {
 		int theta = 4;
 		PartitionProcessor parProcessor = new PartitionProcessor(sql, "releaselabel");
 		ArrayList dataset = parProcessor.getRelabels();
-		
+
 		/**
 		 * Repair w. Gap
 		 */
-		
-		   parProcessor. gapRepair(deltat, theta);
-		  
-		  // baseline 1
+
+		parProcessor.gapRepair(deltat, theta);
+
+		// baseline 1
 		ScaleProcessor scaleProcessor = new ScaleProcessor(parProcessor.finaltimelists, parProcessor.finalreleaselists,
 				deltat);
-		  scaleProcessor.process();
-		  
-		  System.out.println("MonoScale"); //
-		  System.err.println("series missing"); //
-		  parProcessor.scaleRepairMissing(deltat, theta); 
-		  // repair errornous values 
-		  System.out.println("series error"); //
+		scaleProcessor.process();
+
+		System.out.println("MonoScale"); //
+		System.err.println("series missing"); //
+		parProcessor.scaleRepairMissing(deltat, theta);
+		// repair errornous values
+		System.out.println("series error"); //
 		parProcessor.scaleRepairError(deltat, theta);
 		// repair mixtural values
 		System.out.println("series mixture"); //
-		  parProcessor.scaleRepairMissingError(deltat, theta);
-		 
+		parProcessor.scaleRepairMissingError(deltat, theta);
+
 
 		/**
 		 * Process real-world data

@@ -1,6 +1,7 @@
-package org.music.missingtime;
+package org.music.abcod;
 
 import com.wcohen.secondstring.Levenstein;
+import org.jetbrains.annotations.NotNull;
 import org.music.connection.ConnectionPool;
 import org.music.data.ArtistData;
 import org.music.data.Pipe;
@@ -288,17 +289,16 @@ public class PartitionProcessor extends AbstractProcessor {
 				ReleaseLabel relabel = (ReleaseLabel) dataset.get(i);
 
 				int year = relabel.getDate();
-				int clusterid = relabel.getCluster_id();
+				int clusterId = relabel.getCluster_id();
 				String catano = relabel.getCatno();
 
 				Catalog cata = new Catalog(catano);
 				String prefix = cata.getPrefix();
 
-				if (clusterid != current_entity) {
+				if (clusterId != current_entity) {
 					generateBlock(catalists, timelists, releaselists);
 
-					current_entity = clusterid;
-					current_entity = clusterid;
+					current_entity = clusterId;
 					catalists = new HashMap<String, ArrayList<String>>();
 					timelists = new HashMap<String, ArrayList<Integer>>();
 					releaselists = new HashMap<String, ArrayList<ReleaseLabel>>();
@@ -643,8 +643,10 @@ public class PartitionProcessor extends AbstractProcessor {
 		// \t"+size+"\t"+catalist.size()+"\t"+finalcatalists.size());
 	}
 
-	private static void generateBlock(HashMap<String, ArrayList<String>> catalists,
-									  HashMap<String, ArrayList<Integer>> timelists, HashMap<String, ArrayList<ReleaseLabel>> releaselists) {
+	private static void generateBlock(
+			HashMap<String, ArrayList<String>> catalists,
+			HashMap<String, ArrayList<Integer>> timelists,
+			HashMap<String, ArrayList<ReleaseLabel>> releaselists) {
 		// TODO Auto-generated method stub
 		for (Map.Entry<String, ArrayList<String>> element : catalists.entrySet()) {
 			String prefix = element.getKey();
@@ -4789,37 +4791,45 @@ public class PartitionProcessor extends AbstractProcessor {
 		decreasingSeriesCount = 0;
 		increasingSeriesSize = 0;
 		decreasingSeriesSize = 0;
+		int maxSeriesSize = 0;
 
+		System.out.println("finalcatalist size \t" + finalcatalists.size());
+		double startLMB = System.currentTimeMillis();
 		for (int count = 0; count < finalcatalists.size(); count++) {
 			LinkedHashMap<Integer, Integer> timelist = finaltimelists.get(count);
-			LinkedHashMap<Integer, String> catalist = finalcatalists.get(count);
 			LinkedHashMap<Integer, ReleaseLabel> releaselist = finalreleaselists.get(count);
 
 			Block block = new Block(timelist);
 			ArrayList<Integer> sequence = block.getSequence();
+			System.out.println(count + "\t" + "sequence size" + "\t" + block.sequence.size());
 
 			// Find pieces
-			ArrayList<Piece> pieces = new ArrayList<Piece>();
+			ArrayList<Piece> pieces;
 
-			if (block.sequence.size() > 100)
-				// pieces = block.withoutPieces();
-				pieces = block.findLCMBPieces(deltat);
-			else
-				// pieces = block.findLCMBPieces(deltat);
-				pieces = block.withoutPieces();
+//				pieces = block.withoutPieces();
+			pieces = block.findLCMBPieces(deltat);
 			block.setPieces(pieces);
 
-			// System.out.println("# of pieces \t" + pieces.size());
+			System.out.println("\t # of pieces \t" + pieces.size());
 
 			// Discover series
+			Piece[] choppingArray = new Piece[sequence.size()];
 			ArrayList<Piece> chopping = seriesDiscovery(deltat, theta, sequence, pieces);
 			// analyseSeries(chopping);
 			// printLIBs(chopping, sequence);
 			// Evaluate series
 			getSeries(series, chopping, releaselist);
 
+			for (int i = 0; i < chopping.size(); i++) {
+				int currentSeriesLength = chopping.get(i).end - chopping.get(i).start;
+				System.out.println("\t \t max series size: \t" + Math.max(currentSeriesLength, maxSeriesSize));
+			}
 		}
 		Evaluation evaluation = new Evaluation();
+		double endLMB = System.currentTimeMillis();
+		double lmbTime = endLMB - startLMB;
+
+		System.out.println("LMB Runtime: \t" + lmbTime);
 
 		double max_series_size = 0;
 		double min_series_size = 1000000;
@@ -5011,7 +5021,7 @@ public class PartitionProcessor extends AbstractProcessor {
 	}
 
 	public ArrayList<Piece> seriesDiscovery(double deltat, int theta, ArrayList<Integer> sequence,
-											ArrayList<Piece> pieces) {
+											@NotNull ArrayList<Piece> pieces) {
 		/*
 		 * intialize chopping X that starts&ends at each piece; G stores the
 		 * gain of each chopping in X
@@ -5019,12 +5029,8 @@ public class PartitionProcessor extends AbstractProcessor {
 		ArrayList<ArrayList> choppings = new ArrayList<ArrayList>();
 		ArrayList<Double> gains = new ArrayList<Double>();
 
-		// System.out.println("piece size " + pieces.size());
-
-		for (int i = 0; i < pieces.size(); i++) {// 6; i++){//
+		for (int i = 0; i < pieces.size(); i++) {
 			Piece piece = pieces.get(i);
-			// System.out.println("piece:[" + piece.getStart() + "," +
-			// piece.getEnd() + "]\t" + (piece.size));
 
 			double gain = piece.computeGain(sequence, deltat);
 			piece.setGain(gain);
@@ -5042,8 +5048,7 @@ public class PartitionProcessor extends AbstractProcessor {
 		/*
 		 * find the best chopping from piece 0 to piece i
 		 */
-		for (int i = 1; i < pieces.size(); i++) { // 6; i++){// // loop from the
-			// 2nd piece
+		for (int i = 1; i < pieces.size(); i++) {
 			Piece current_piece = pieces.get(i);
 			// System.out.println( "process piece \t" + i + "\t" +
 			// current_piece.getStart() + " to " + current_piece.getEnd());
@@ -5096,7 +5101,6 @@ public class PartitionProcessor extends AbstractProcessor {
 			// update the best chopping from piece 0 to piece i, and gain
 			choppings.set(i, max_chopping);
 			gains.set(i, max_gain);
-
 		}
 
 		// best chopping:
@@ -5105,13 +5109,6 @@ public class PartitionProcessor extends AbstractProcessor {
 		ArrayList<Piece> chopping = new ArrayList<Piece>();
 		if (!choppings.isEmpty()) {
 			chopping = choppings.get(n - 1);
-			for (int i = 0; i < chopping.size(); i++) {
-				Piece piece = chopping.get(i);
-				// System.out.println(
-				// "\t" + i + "\t series: [" + piece.getStart() + "," +
-				// piece.getEnd() + "] \t" + piece.getGain());
-			}
-			// System.out.println("\t max gain:"+gains.get(n-1));
 		}
 
 		return chopping;
@@ -5146,11 +5143,14 @@ public class PartitionProcessor extends AbstractProcessor {
 	 * @param chopping
 	 * @param sequence
 	 * @param deltat
-	 * @param truths.containsKey(key)truths
+	 * @param groundTruths
 	 * @return
 	 */
-	private HashMap<Integer, Triple> repairValues(ArrayList<Piece> chopping, ArrayList<Integer> sequence, int deltat,
-												  HashMap<Integer, Integer> truths) {
+	private HashMap<Integer, Triple> repairValues(
+			ArrayList<Piece> chopping,
+			ArrayList<Integer> sequence,
+			int deltat,
+			HashMap<Integer, Integer> groundTruths) {
 
 		// System.out.println("repair values");
 		HashMap<Integer, Triple> repairs = new HashMap<Integer, Triple>();
@@ -5186,8 +5186,8 @@ public class PartitionProcessor extends AbstractProcessor {
 						end = String.valueOf(triple.getEnd());
 
 					String truth = "";
-					if (truths.containsKey(j))
-						truth = String.valueOf(truths.get(j));
+					if (groundTruths.containsKey(j))
+						truth = String.valueOf(groundTruths.get(j));
 					String avg = "";
 					if (triple.getAvg() > 0)
 						avg = String.valueOf(triple.getAvg());

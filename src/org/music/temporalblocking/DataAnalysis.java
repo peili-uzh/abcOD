@@ -1,12 +1,12 @@
 package org.music.temporalblocking;
 
 import com.wcohen.secondstring.Levenstein;
+import org.music.abcod.Catalog;
 import org.music.block.AbstractBlock;
 import org.music.connection.ConnectionPool;
 import org.music.data.ArtistData;
 import org.music.data.LabelData;
 import org.music.data.ReleaseLabel;
-import org.music.missingtime.Catalog;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

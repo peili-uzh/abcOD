@@ -1,4 +1,4 @@
-package org.music.missingtime;
+package org.music.abcod;
 
 import org.music.block.AbstractBlock;
 import org.music.connection.ConnectionPool;
@@ -184,7 +184,6 @@ public abstract class AbstractProcessor {
 		Connection con = ConnectionPool.getConnection();
 
 		if (!con.isClosed()) {
-			int i = 0;
 			Statement st = con.createStatement();
 			System.out.println(sql);
 			ResultSet result = st.executeQuery(sql);
@@ -226,35 +225,15 @@ public abstract class AbstractProcessor {
 				String new_year = "";// result.getString("new_date");
 				new_year = parseDateToYear(new_year);
 
-				String ground_truth = "2020";// result.getString("ground_truth");//
+				String ground_truth = "2999";// result.getString("ground_truth");//
 				// "2016";//
 				ground_truth = parseDateToYear(ground_truth);
 
 				// System.out.println(i + "\t" + catno + "\t" + year);
-				i++;
 				// System.out.println(catno);
 
 				/*
 				 * if (!year.equals("0")) { ground_truth = "0"; }
-				 */
-
-				// String new_country = result.getString("new_country");
-				// String new_title = result.getString("new_title");
-				// String new_label = result.getString("new_label");
-				// String new_catno = result.getString("new_catno");
-				// String new_format = result.getString("new_format");
-
-				/*
-				 * release = AbstractBlock.cleanValue(release); country =
-				 * AbstractBlock.cleanValue(country); artist =
-				 * AbstractBlock.cleanValue(artist); label =
-				 * AbstractBlock.cleanValue(label); extra_artist =
-				 * AbstractBlock.cleanValue(extra_artist); format =
-				 * format.replace("[", ""); format = format.replace("]", "");
-				 * //format = AbstractBlock.cleanValue(format); styles =
-				 * AbstractBlock.cleanValue(styles); genres =
-				 * AbstractBlock.cleanValue(genres); //catno =
-				 * AbstractBlock.cleanValue(catno);
 				 */
 
 				ArrayList genreslist = new ArrayList();
@@ -264,55 +243,56 @@ public abstract class AbstractProcessor {
 					stylelist = convert2List(styles, stylelist, "\\|");
 				}
 
-				if (temp.containsKey(id)) {
-					ReleaseLabel relabel = temp.get(id);
-					String artists = relabel.getStrartist();
-					if (artist != null && !artists.contains(artist)) {
-						artists += "|" + artist;
-						relabel.setStrartist(artists);
+				if (!year.equals("0")) {
+					if (temp.containsKey(id)) {
+						ReleaseLabel relabel = temp.get(id);
+						String artists = relabel.getStrartist();
+						if (artist != null && !artists.contains(artist)) {
+							artists += "|" + artist;
+							relabel.setStrartist(artists);
+						}
+
+						String extra_artists = relabel.getStrextrartist();
+						if (extra_artist != null && !extra_artists.contains(extra_artist)) {
+							extra_artists += "|" + extra_artist;
+							relabel.setStrextrartist(extra_artists);
+						}
+						/*
+						 * ArrayList artists = releaselabel.getArtist();
+						 * if(!artists.contains(artist)) artists.add(artist);
+						 * ArrayList extra_artists = releaselabel.getExtra_artist();
+						 * if(!extra_artists.contains(extra_artist))
+						 * extra_artists.add(extra_artist);
+						 */
+					} else {
+						ReleaseLabel relabel = new ReleaseLabel();
+						relabel.setId(id);
+						relabel.setRelease(release);
+						relabel.setGenreslist(genreslist);
+						relabel.setStyleslist(stylelist);
+						relabel.setCountry(country);
+						relabel.setDate(Integer.valueOf(year));
+						relabel.setLabel(label);
+						relabel.setStrartist(artist);
+						relabel.setCluster_id(cluster_id);
+						relabel.setStrextrartist(extra_artist);
+						relabel.setFormat(format);
+						relabel.setQty(qty);
+						relabel.setFormat_description(description);
+						relabel.setCatno(catno);
+						relabel.setPartition_id(partition_id);
+						relabel.setNew_date(Integer.valueOf(new_year));
+						// relabel.setNew_country(new_country);
+						// relabel.setNew_release(new_title);
+						// relabel.setNew_label(new_label);
+						// relabel.setNew_catno(new_catno);
+						// relabel.setNew_format(new_format);
+						relabel.setGround_truth(Integer.valueOf(ground_truth));
+
+						temp.put(id, relabel);
+
 					}
-
-					String extra_artists = relabel.getStrextrartist();
-					if (extra_artist != null && !extra_artists.contains(extra_artist)) {
-						extra_artists += "|" + extra_artist;
-						relabel.setStrextrartist(extra_artists);
-					}
-					/*
-					 * ArrayList artists = releaselabel.getArtist();
-					 * if(!artists.contains(artist)) artists.add(artist);
-					 * ArrayList extra_artists = releaselabel.getExtra_artist();
-					 * if(!extra_artists.contains(extra_artist))
-					 * extra_artists.add(extra_artist);
-					 */
-				} else {
-					ReleaseLabel relabel = new ReleaseLabel();
-					relabel.setId(id);
-					relabel.setRelease(release);
-					relabel.setGenreslist(genreslist);
-					relabel.setStyleslist(stylelist);
-					relabel.setCountry(country);
-					relabel.setDate(Integer.valueOf(year));
-					relabel.setLabel(label);
-					relabel.setStrartist(artist);
-					relabel.setCluster_id(cluster_id);
-					relabel.setStrextrartist(extra_artist);
-					relabel.setFormat(format);
-					relabel.setQty(qty);
-					relabel.setFormat_description(description);
-					relabel.setCatno(catno);
-					relabel.setPartition_id(partition_id);
-					relabel.setNew_date(Integer.valueOf(new_year));
-					// relabel.setNew_country(new_country);
-					// relabel.setNew_release(new_title);
-					// relabel.setNew_label(new_label);
-					// relabel.setNew_catno(new_catno);
-					// relabel.setNew_format(new_format);
-					relabel.setGround_truth(Integer.valueOf(ground_truth));
-
-					temp.put(id, relabel);
-
 				}
-				i++;
 
 			}
 

@@ -1,4 +1,4 @@
-package org.music.missingtime;
+package org.music.abcod;
 
 import org.music.data.Pipe;
 
@@ -414,15 +414,11 @@ public class Piece extends Block {
 		LinkedHashMap<Integer, ArrayList> incPaths = new LinkedHashMap<Integer, ArrayList>();
 		LinkedHashMap<Integer, ArrayList> decPaths = new LinkedHashMap<Integer, ArrayList>();
 
-		//ArrayList<ArrayList> incPaths = new ArrayList<ArrayList>();
-		//ArrayList<ArrayList> decPaths = new ArrayList<ArrayList>();
-
 		int incLength = 0;
 		int decLength = 0;
 
 		for (int i = start; i <= end; i++) {
 			int year = sequence.get(i);
-			//System.out.println("\t"+i+"\t"+year);
 
 			if (year > 0) {
 
@@ -490,21 +486,12 @@ public class Piece extends Block {
 			// System.out.println("increasing length \t" + incLength);
 			lmb = band(incPaths, incLength - 1);
 			increase = true;
-
-			// lmb = band(decPaths, decLength - 1);
-			// increase = false;
 		} else {
-			// lmb = band(incPaths, incLength - 1);
-			// increase = true;
-
-			// System.out.println("decreasing length \t" + decLength);
 			lmb = band(decPaths, decLength - 1);
 			increase = false;
 		}
 
 		return lmb;
-
-
 	}
 
 	/**
@@ -564,19 +551,22 @@ public class Piece extends Block {
 	/**
 	 * Find the successor index of year in the increasing list
 	 *
-	 * @param incList
+	 * @param arrayList
 	 * @param year
 	 * @return
 	 */
-	private int getIncPosition(ArrayList<Integer> list, double year) {
+	private int getIncPosition(ArrayList<Integer> arrayList, double year) {
 		// TODO Auto-generated method stub
 		int position = 0;
 
-		if (!list.isEmpty()) {
+//		List<Integer> list = arrayList;
+//		int index = Collections.binarySearch();
+
+		if (!arrayList.isEmpty()) {
 			int i = 0;
 			Boolean stop = false;
-			while (i < list.size() && !stop) {
-				int temp = list.get(i);
+			while (i < arrayList.size() && !stop) {
+				int temp = arrayList.get(i);
 				if (temp > year) {
 					position = i;
 					stop = true;
@@ -585,7 +575,7 @@ public class Piece extends Block {
 			}
 
 			if (!stop)
-				position = list.size();
+				position = arrayList.size();
 		}
 
 		return position;
@@ -823,23 +813,14 @@ public class Piece extends Block {
 	}
 
 	public Double computeGain(ArrayList<Integer> sequence, double deltat) {
-
 		// get LMB in sequence
 		lmb = findLMB(sequence, deltat);
 
 		//get outliers in sequence
 		maxErrors = getMaxError(lmb, sequence);
 		errors = findErrors(lmb, sequence);
-		// System.out.println(errors.size() + "\t" + lmb.size());
 
 		double gain = Math.pow(lmb.size(), 2) - Math.pow(errors.size(), 2);
-		// double gain = Math.pow(lmb.size(), 2) - Math.pow(maxErrors, 2);
-		// System.out.println("\t\t pieces \t" + sequence.size() + "\t\t lmb \t"
-		// + lmb.size() + "\t\t errors \t" + errors.size() + "\t\t gain \t" +
-		// gain);
-		// System.out.println();
-
-		//System.out.println("\t gain \t"+gain);
 		return gain;
 	}
 

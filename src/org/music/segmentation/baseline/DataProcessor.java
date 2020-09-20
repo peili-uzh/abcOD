@@ -1,6 +1,6 @@
 package org.music.segmentation.baseline;
 
-import org.music.missingtime.PartitionProcessor;
+import org.music.abcod.PartitionProcessor;
 
 import java.util.ArrayList;
 

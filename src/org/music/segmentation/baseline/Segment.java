@@ -1,6 +1,6 @@
 package org.music.segmentation.baseline;
 
-import org.music.missingtime.Piece;
+import org.music.abcod.Piece;
 
 public class Segment extends Piece {
 
