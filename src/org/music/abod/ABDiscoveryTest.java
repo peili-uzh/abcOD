@@ -10,34 +10,15 @@ public class ABDiscoveryTest {
         String SQL =
                 "select id, date, title as release_1, catno, label as label_name from music.music_release " +
                         "where (date NOT IN (' ', ' ', ' ', ' ') AND date IS NOT NULL) " +
-                        "order by label, catno limit 100000";
+                        "order by label, catno, date limit 600000";
+        System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
         testScalability(SQL);
 
-//        PartitionProcessor parProcessor = new PartitionProcessor(SQL, "releaselabel");
-//        ArrayList dataset = parProcessor.getRelabels();
-//        double[] yearSequence = new double[dataset.size()];
-//        for (int i = 0; i < dataset.size(); i++) {
-//                ReleaseLabel relabel = (ReleaseLabel) dataset.get(i);
-//
-//                int year = relabel.getDate();
-//                yearSequence[i] = year;
-//        }
-//
+//        double[] input = {1990, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY};
 //        ABDiscovery discovery = new ABDiscovery();
-//
-//        double bandWidth = 3.0;
-//        System.out.println(yearSequence.length);
-////        for(int i = 0; i < yearSequence.length; i++){
-////            System.out.println(yearSequence[i]);
-////        }
-//
-//        double startLMB = System.currentTimeMillis();
-//        double[] lmb = discovery.computeBaselineLMB(yearSequence, bandWidth);
-//        double endLMB = System.currentTimeMillis();
-//        double lmbTime = endLMB - startLMB;
-//
-//        System.out.println("LMB Runtime: \t" + lmbTime);
-//        System.out.println("LMB size \t" + lmb.length);
+//        double value = 2000;
+//        int position = discovery.binarySearchLeftMostPosition(value, input);
+//        System.out.println(value +"\t"+position+"\t"+input[position]);
     }
 
     public static void testScalability(String sql) throws Exception {
@@ -46,6 +27,7 @@ public class ABDiscoveryTest {
         int totalSize = dataset.size();
         int partition = 10;
         int partitionSize = totalSize / partition;
+        System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
 
         for (int p = 0; p < partition; p++) {
             int subSize = partitionSize * (p + 1);
@@ -61,18 +43,35 @@ public class ABDiscoveryTest {
                 int year = relabel.getDate();
                 yearSequence[i] = year;
             }
-//                System.out.println("dataset size: \t" + yearSequence.length);
+
+//            for(int m = 0; m < yearSequence.length; m++){
+//                System.out.println(yearSequence[m]);
+//            }
+            System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
 
             ABDiscovery discovery = new ABDiscovery();
 
             double bandWidth = 3.0;
             double startLMB = System.currentTimeMillis();
-            double[] lmb = discovery.computeBaselineLMB(yearSequence, bandWidth);
+            double[] lmb = discovery.computeLMB(yearSequence, bandWidth);
             double endLMB = System.currentTimeMillis();
             double lmbTime = endLMB - startLMB;
-
             System.out.println("LMB Runtime: \t" + yearSequence.length + "\t" + lmbTime + "\t" + lmb.length);
-//                System.out.println("LMB size \t" + lmb.length);
+
+
+//            System.out.println("lmb: "+"\t"+lmb.length);
+//            for(int m = 0; m < lmb.length; m++){
+//                System.out.println(lmb[m]);
+//            }
+//            System.out.println("baselineLMB: "+"\t"+baselineLMB.length);
+//            for(int m = 0; m < baselineLMB.length; m++){
+//                System.out.println(baselineLMB[m]);
+//            }
+
+//            double[] baselineLMB = discovery.computeBaselineLMB(yearSequence, bandWidth);
+            double endBaselineLMB = System.currentTimeMillis();
+            double baselineLMBTime = endBaselineLMB - endLMB;
+//            System.out.println("LMB Runtime: \t" + yearSequence.length + "\t" + baselineLMBTime + "\t" + baselineLMB.length);
         }
     }
 }
