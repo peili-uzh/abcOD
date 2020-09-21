@@ -182,6 +182,8 @@ public abstract class AbstractProcessor {
 		this.clusterlist = new HashMap<Integer, Integer>();
 
 		Connection con = ConnectionPool.getConnection();
+		System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
+
 
 		if (!con.isClosed()) {
 			Statement st = con.createStatement();
@@ -308,6 +310,8 @@ public abstract class AbstractProcessor {
 			records.add(records.size(), relabel);
 		}
 		System.out.println("discogs label size \t" + records.size());
+		System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
+
 		return records;
 
 	}

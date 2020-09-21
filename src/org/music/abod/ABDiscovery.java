@@ -2,7 +2,6 @@ package org.music.abod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ABDiscovery {
@@ -14,35 +13,51 @@ public class ABDiscovery {
         double minValue = 0.0;
 
         double[] bestValues = new double[input.length + 1];
-        ArrayList<List<Integer>> maxLengths = new ArrayList<>();
+        ArrayList<int[]> maxLengths = new ArrayList<>();
 
         // initialise best values
         bestValues[0] = minValue;
 //        Set<Integer> emptySet = Collections.emptySet();
-        maxLengths.add(0, new ArrayList<Integer>());
+        int[] initialBandLengths = new int[2];
+        initialBandLengths[0] = 1;
+        initialBandLengths[1] = 1;
+        maxLengths.add(0, initialBandLengths);
         for (int i = 1; i < input.length; i++) {
             bestValues[i] = infinityValue;
-            int size = (int) bandWidth;
-            maxLengths.add(i, new ArrayList<Integer>(size));
+            maxLengths.add(i, initialBandLengths);
         }
 
         bestValues[input.length] = infinityValue;
         int bandLength = 1;
 
-        System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
+//        System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
 
         for (int i = 1; i < input.length + 1; i++) {
             double value = input[i - 1];
             int bestPosition1 = binarySearchLeftMostPosition(value, bestValues);
             int bestPosition2 = binarySearchLeftMostPosition(value + bandWidth, bestValues);
             bandLength = Math.max(bandLength, bestPosition2);
+            if ((bestPosition2 - bestPosition1) > bandWidth) {
+//                for(int n = 0; n <= input.length; n++){
+//                    System.out.println(n+"\t"+input[n]);
+//                }
+//                System.out.println("best value starts:");
+//                System.out.println(bestPosition2+"\t"+bestPosition1+"\t"+value);
+//                for(int n = 0; n < bestValues.length; n++){
+//                    System.out.println(n+"\t"+bestValues[n]);
+//                }
+//                System.out.println("best value end");
+            }
+//            System.out.println(i +"\t"+bestPosition1+"\t"+bestPosition2+"\t"+(bestPosition2-bestPosition1)+"\t  Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
+
+            int[] lengths = maxLengths.get(i - 1);
+            lengths[0] = bestPosition1;
+            lengths[1] = bestPosition2;
             for (int k = bestPosition2; k >= bestPosition1; k--) {
                 double bestValue = minValue;
                 if (k > 1)
                     bestValue = bestValues[k - 1];
                 bestValues[k] = Math.max(bestValue, value);
-                List<Integer> lengths = maxLengths.get(i - 1);
-                lengths.add(k);
                 //lengths.add(lengths.size(), k);
 //                System.gc();
             }
@@ -51,8 +66,10 @@ public class ABDiscovery {
         lmb = new double[bandLength];
         int length = bandLength;
         for (int i = input.length - 1; i >= 0; i--) {
-            List<Integer> currentLengths = maxLengths.get(i);
-            if (currentLengths.contains(length)) {
+            int[] currentLengths = maxLengths.get(i);
+            int minLength = currentLengths[0];
+            int maxLength = currentLengths[1];
+            if (minLength <= length && length <= maxLength) {
                 lmb[length - 1] = input[i];
                 length = length - 1;
             }
