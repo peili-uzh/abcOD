@@ -14,15 +14,15 @@ public class DataLoader {
         int i = 0;
         if (!con.isClosed()) {
             Statement st = con.createStatement();
-            System.out.println(sql);
+//            System.out.println(sql);
             ResultSet result = st.executeQuery(sql);
 
             while (result.next()) {
-                String year = result.getString("date");
+                String year = result.getString("time");
                 year = parseDateToYear(year);
 
                 if (!year.equals("0") && i < dataSize) {
-                    musicYearSequence[i] = Integer.valueOf(year);
+                    musicYearSequence[i] = Double.valueOf(year);
                     i = i + 1;
                 }
             }
