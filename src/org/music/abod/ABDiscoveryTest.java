@@ -4,7 +4,7 @@ import org.music.connection.DataLoader;
 
 public class ABDiscoveryTest {
     public static void main(String[] args) throws Exception {
-        int dataSize = 4000000;
+        int dataSize = 1000;
         String SQL =
 //                "select dep_time_in_hr as time from music.nationwide_2018_flight order by origin_airport_id, fl_date, crs_dep_time_in_hr, op_carrier_fl_num ";
                 // sfo flight
@@ -32,7 +32,7 @@ public class ABDiscoveryTest {
 
             String queryWithDataSize = sql + " limit " + subSize + ";";
 
-            double[] yearSequence = new DataLoader().loadMusicData(queryWithDataSize, subSize);
+            double[] yearSequence = new DataLoader().loadDataForABDiscovery(queryWithDataSize, subSize);
 //            for(int m = 0; m < yearSequence.length; m++){
 //                System.out.println(yearSequence[m]);
 //            }
@@ -40,7 +40,7 @@ public class ABDiscoveryTest {
 
             double bandWidth = 1.0;
             double startLMB = System.currentTimeMillis();
-            double[] lmb = discovery.computeLMB(yearSequence, bandWidth);
+            double[] lmb = discovery.computeLMB(yearSequence, bandWidth, new Outlier());
             double endLMB = System.currentTimeMillis();
             double lmbTime = endLMB - startLMB;
             System.out.println("LMB Runtime: \t" + yearSequence.length + "\t" + lmbTime + "\t" + lmb.length);

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ABDiscovery {
 
-    public double[] computeLMB(double[] input, double bandWidth) {
+    public double[] computeLMB(double[] input, double bandWidth, Outlier outlier) {
         double[] lmb;
 
         double infinityValue = Double.POSITIVE_INFINITY;
@@ -37,34 +37,23 @@ public class ABDiscovery {
             int bestPosition1 = binarySearchLeftMostPosition(value, bestValues);
             int bestPosition2 = binarySearchLeftMostPosition(value + bandWidth, bestValues);
             bandLength = Math.max(bandLength, bestPosition2);
-            if ((bestPosition2 - bestPosition1) > bandWidth) {
-//                for(int n = 0; n <= input.length; n++){
-//                    System.out.println(n+"\t"+input[n]);
-//                }
-//                System.out.println("best value starts:");
-//                System.out.println(bestPosition2+"\t"+bestPosition1+"\t"+value);
-//                for(int n = 0; n < bestValues.length; n++){
-//                    System.out.println(n+"\t"+bestValues[n]);
-//                }
-//                System.out.println("best value end");
-            }
-//            System.out.println(i +"\t"+bestPosition1+"\t"+bestPosition2+"\t"+(bestPosition2-bestPosition1)+"\t  Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
 
             int[] lengths = maxLengths.get(i - 1);
             lengths[0] = bestPosition1;
             lengths[1] = bestPosition2;
             for (int k = bestPosition2; k >= bestPosition1; k--) {
                 double bestValue = minValue;
-                if (k > 1)
+                if (k > 1) {
                     bestValue = bestValues[k - 1];
+                }
                 bestValues[k] = Math.max(bestValue, value);
-                //lengths.add(lengths.size(), k);
-//                System.gc();
             }
         }
 
         lmb = new double[bandLength];
         int length = bandLength;
+        int maxOutlierCount = 0;
+        int previousIndex = -1;
         for (int i = input.length - 1; i >= 0; i--) {
             int[] currentLengths = maxLengths.get(i);
             int minLength = currentLengths[0];
@@ -72,8 +61,13 @@ public class ABDiscovery {
             if (minLength <= length && length <= maxLength) {
                 lmb[length - 1] = input[i];
                 length = length - 1;
+
+//                    maxOutlierCount = Math.max(maxOutlierCount, previousIndex-i+1);
+//                    previousIndex = i;
             }
         }
+
+        outlier.setMaxOutlierCount(maxOutlierCount);
 
         return lmb;
     }
