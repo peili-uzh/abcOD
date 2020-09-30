@@ -12,7 +12,7 @@ public class Test {
 	private static String SQL =
 			"select id, date, title as release_1, catno, label as label_name from music.music_release " +
 					"where (date NOT IN (' ', ' ', ' ', ' ') AND date IS NOT NULL) " +
-					"order by label, catno limit 200000";
+					"order by label, catno, date limit 1000000";
 
 	public static void main(String[] args) throws Exception {
 
@@ -93,23 +93,23 @@ public class Test {
 				// baseline: gap
 				double start = System.currentTimeMillis();
 				// System.out.println("gap:");
-//				parProcessor.partitionWithGap("releaselabel", subDataSet);
+				parProcessor.partitionWithGap("releaselabel", subDataSet);
 				double endGAP = System.currentTimeMillis();
 				double gapTime = endGAP - start;
-				// System.out.println("Gap Runtime: \t" + gapTime);
+				System.out.println("Gap Runtime: \t" + subSize + "\t" + gapTime);
 
 				// blocking
 				// System.out.println("Block:");
 				parProcessor.block("releaselabel", subDataSet);
 
-				System.out.println("subDataSet size \t" + subDataSet.size());
+//				System.out.println("subDataSet size \t" + subDataSet.size());
 				// System.out.println("LMB:");
 				double startLMB = System.currentTimeMillis();
-				parProcessor.series(deltat, theta);
+//				parProcessor.series(deltat, theta);
 				double endLMB = System.currentTimeMillis();
 				double lmbTime = endLMB - startLMB;
 
-				System.out.println("LMB Runtime: \t" + lmbTime);
+//				System.out.println("LMB Runtime: \t" + lmbTime);
 
 				// System.out.println("LMS:");
 				// parProcessor.series(0, theta);

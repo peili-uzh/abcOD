@@ -15,7 +15,7 @@ public class DataLoader {
         int i = 0;
         if (!con.isClosed()) {
             Statement st = con.createStatement();
-            System.out.println(sql);
+//            System.out.println(sql);
             ResultSet result = st.executeQuery(sql);
 
             while (result.next()) {

@@ -52,7 +52,7 @@ public class ABCDiscoveryTest {
 
                 ABCDiscovery abcDiscovery = new ABCDiscovery();
 
-                double bandWidth = 3.0;
+                double bandWidth = 0.0;
                 int errorThreshold = 4;
                 ArrayList<Integer> series = abcDiscovery.computeSeries(yearSequence, bandWidth, errorThreshold);
 //                System.out.println(series.size());
