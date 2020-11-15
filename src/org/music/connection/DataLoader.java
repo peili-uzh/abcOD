@@ -15,28 +15,27 @@ public class DataLoader {
         int i = 0;
         if (!con.isClosed()) {
             Statement st = con.createStatement();
-//            System.out.println(sql);
+            System.out.println(sql);
             ResultSet result = st.executeQuery(sql);
 
             while (result.next()) {
                 String groupId = result.getString("group_id");
                 String year = result.getString("time");
-                year = parseDateToYear(year);
-//                String catalogNumber = result.getString("catno");
-//                String catPrefix = catalogNumber.replaceAll("[0-9]", "");
-//                System.out.println(catalogNumber+"\t"+catPrefix);
-//                groupId = groupId + catPrefix;
-//                System.out.println(catalogNumber+"\t"+catPrefix+"\t"+groupId);
+//                year = parseDateToYear(year);
 
-                if (!year.equals("0") && i < dataSize) {
-                    ArrayList<Double> yearSequence = new ArrayList<>();
-                    if (groupedYearSequence.containsKey(groupId)) {
-                        yearSequence = groupedYearSequence.get(groupId);
+//                System.out.println(groupId+"\t"+year);
+
+                if (year != null) {
+                    if (!year.equals("0") && i < dataSize) {
+                        ArrayList<Double> yearSequence = new ArrayList<>();
+                        if (groupedYearSequence.containsKey(groupId)) {
+                            yearSequence = groupedYearSequence.get(groupId);
+                        }
+                        yearSequence.add(Double.valueOf(year));
+                        groupedYearSequence.put(groupId, yearSequence);
+
+                        i = i + 1;
                     }
-                    yearSequence.add(Double.valueOf(year));
-                    groupedYearSequence.put(groupId, yearSequence);
-
-                    i = i + 1;
                 }
             }
             result.close();

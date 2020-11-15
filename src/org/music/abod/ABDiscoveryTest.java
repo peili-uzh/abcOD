@@ -40,7 +40,7 @@ public class ABDiscoveryTest {
 
             double bandWidth = 1.0;
             double startLMB = System.currentTimeMillis();
-            double[] lmb = discovery.computeLMB(yearSequence, bandWidth, new Outlier());
+            int[] lmb = discovery.computeLMB(yearSequence, bandWidth, new Outlier());
             double endLMB = System.currentTimeMillis();
             double lmbTime = endLMB - startLMB;
             System.out.println("LMB Runtime: \t" + yearSequence.length + "\t" + lmbTime + "\t" + lmb.length);

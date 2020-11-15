@@ -35,24 +35,22 @@ public class ABCDiscovery {
                 gains[j] = gain;
                 seriesIndices[j] = j;
             } else {
-                for (int i = 0; i < j; i++) {
-                    int subSequenceLength = endIndex - pieceBoundaries.get(i + 1);
+                for (int i = 0; i <= j; i++) {
+                    int subSequenceLength = endIndex - pieceBoundaries.get(i);
                     double[] subSequence = new double[subSequenceLength];
-                    System.arraycopy(input, pieceBoundaries.get(i + 1), subSequence, 0, subSequenceLength);
+                    System.arraycopy(input, pieceBoundaries.get(i), subSequence, 0, subSequenceLength);
                     Outlier outlier = new Outlier();
 
-//                    double startSeriesTime = System.currentTimeMillis();
-                    double[] lmb = new ABDiscovery().computeLMB(subSequence, bandWidth, outlier);
-//                    if(subSequenceLength >1000){
-//                        double endSeriesTime = System.currentTimeMillis();
-//                        System.out.println("LMB Runtime: \t" + subSequenceLength + "\t" + (endSeriesTime - startSeriesTime) );
-//                        System.out.println("\t sub sequence length \t"+subSequenceLength+"\t"+endIndex+"\t"+pieceBoundaries.get(i+1)+"\t"+input.length+"\t"+j+"\t"+i);
-//                    }
+                    int[] lmb = new ABDiscovery().computeLMB(subSequence, bandWidth, outlier);
 
                     double gain = Math.pow(lmb.length, 2) - Math.pow((subSequenceLength - lmb.length), 2);
                     if (outlier.getMaxOutlierCount() <= errorThreshold) {
                         double currentGain = gains[j];
-                        double candidateGain = gains[i] + gain;
+                        double accumulatedGain = 0;
+                        if (i > 0) {
+                            accumulatedGain = gains[i - 1];
+                        }
+                        double candidateGain = accumulatedGain + gain;
                         if (candidateGain > currentGain) {
                             gains[j] = candidateGain;
                             seriesIndices[j] = i;
@@ -65,11 +63,14 @@ public class ABCDiscovery {
 
 
         int index = seriesIndices.length - 2;
-        while (index > 0) {
+//        seriesBoundaries.add(input.length);
+        while (index >= 0) {
             int inputIndex = pieceBoundaries.get(seriesIndices[index]);
             index = seriesIndices[index] - 1;
+//            System.out.println("\t\t"+inputIndex);
             seriesBoundaries.add(inputIndex);
         }
+//        seriesBoundaries.add(0);
 
         return seriesBoundaries;
     }
