@@ -88,7 +88,9 @@ public class ScaleLabeller {
      */
     private void labelExtrem(int i, int scale, SequenceList extrema) {
         ExtremumRecord record = (ExtremumRecord) extrema.getElement(i); // get the second element in scales
-        record.setScale(scale);
+        if (record != null) {
+            record.setScale(scale);
+        }
         //System.out.println("\t\t label record \t"+record.getValue()+"\t"+scale);
         extrema.remove(i);
     }

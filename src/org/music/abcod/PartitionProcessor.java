@@ -1,7 +1,6 @@
 package org.music.abcod;
 
 import com.wcohen.secondstring.Levenstein;
-import org.jetbrains.annotations.NotNull;
 import org.music.connection.ConnectionPool;
 import org.music.data.ArtistData;
 import org.music.data.Pipe;
@@ -5021,7 +5020,9 @@ public class PartitionProcessor extends AbstractProcessor {
 	}
 
 	public ArrayList<Piece> seriesDiscovery(double deltat, int theta, ArrayList<Integer> sequence,
-											@NotNull ArrayList<Piece> pieces) {
+//											@NotNull ArrayList<Piece> pieces) {
+											ArrayList<Piece> pieces) {
+
 		/*
 		 * intialize chopping X that starts&ends at each piece; G stores the
 		 * gain of each chopping in X

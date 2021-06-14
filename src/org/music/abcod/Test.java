@@ -13,6 +13,9 @@ public class Test {
 			"select id, date, title as release_1, catno, label as label_name from music.music_release " +
 					"where (date NOT IN (' ', ' ', ' ', ' ') AND date IS NOT NULL) " +
 					"order by label, catno, date limit 1000000";
+	private static String SFO = "select 1 as id, time as date, airline as release_1, concat(airline, flight_number," +
+			" transaction, time_in_hr) as catno, concat(airline, flight_number, transaction) as label_name from music.sfo_flight" +
+			" order by label_name, catno, date limit 1000000";
 
 	public static void main(String[] args) throws Exception {
 
@@ -69,15 +72,14 @@ public class Test {
 		 * test scalability
 		 *
 		 */
-		testScalability(SQL);
-
+		testScalability(SFO);
 	}
 
 	public static void testScalability(String sql) throws Exception {
 		PartitionProcessor parProcessor = new PartitionProcessor(sql, "releaselabel");
 		ArrayList dataset = parProcessor.getRelabels();
 		int totalSize = dataset.size();
-		int partition = 1;
+		int partition = 10;
 		int partitionSize = totalSize / partition;
 
 		// System.out.println("\t \t Gap \t LMB \t LMS \t MonoScale");
@@ -96,11 +98,11 @@ public class Test {
 				parProcessor.partitionWithGap("releaselabel", subDataSet);
 				double endGAP = System.currentTimeMillis();
 				double gapTime = endGAP - start;
-				System.out.println("Gap Runtime: \t" + subSize + "\t" + gapTime);
+				System.out.println("Gap Runtime: \t" + (i + 1) + "\t" + gapTime);
 
 				// blocking
 				// System.out.println("Block:");
-				parProcessor.block("releaselabel", subDataSet);
+//				parProcessor.block("releaselabel", subDataSet);
 
 //				System.out.println("subDataSet size \t" + subDataSet.size());
 				// System.out.println("LMB:");
@@ -117,13 +119,13 @@ public class Test {
 				double lmsTime = endLMS - endLMB;
 				// System.out.println("LMS Runtime: \t" + lmsTime);
 
-				// System.out.println("MonoScale:");
-				// ScaleProcessor scaleProcessor = new
-				// ScaleProcessor(parProcessor.finaltimelists,parProcessor.finalreleaselists,
-				// deltat);
-				// scaleProcessor.process();
-				// double endScale = System.currentTimeMillis();
-				// double scaleTime = endScale - endLMS;
+//				 System.out.println("MonoScale:");
+				 /*ScaleProcessor scaleProcessor = new ScaleProcessor(parProcessor.finaltimelists,parProcessor.finalreleaselists, deltat);
+				 scaleProcessor.process();
+				 double endScale = System.currentTimeMillis();
+				 double scaleTime = endScale - start;
+				System.out.println("MonoScale Runtime: \t" + subSize + "\t" + scaleTime);*/
+
 			}
 		}
 	}

@@ -96,7 +96,7 @@ public class ScaleProcessor extends Processor {
          * Evaluate series.
          */
         Evaluation evaluation = new Evaluation();
-        evaluation.evaluationPartition(series);
+//        evaluation.evaluationPartition(series);
 
         this.series = series;
     }

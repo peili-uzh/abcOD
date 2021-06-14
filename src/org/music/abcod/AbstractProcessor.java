@@ -182,7 +182,7 @@ public abstract class AbstractProcessor {
 		this.clusterlist = new HashMap<Integer, Integer>();
 
 		Connection con = ConnectionPool.getConnection();
-		System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
+//		System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
 
 
 		if (!con.isClosed()) {
@@ -196,9 +196,10 @@ public abstract class AbstractProcessor {
 			// new_date, new_country, new_title, new_label, new_catno,
 			// new_format
 			// 1, 2, 3, 4, 5, 6, 7, 8, 9 10, 11 12 13 14 15 16 17 18 19 20 21 22
+			int i = 0;
 
 			while (result.next()) {
-				int id = result.getInt("id");
+				int id = i;//result.getInt("id");
 				String release = result.getString("release_1");
 				// String release = result.getString("release");
 				String genres = "";// result.getString("genres");
@@ -295,7 +296,7 @@ public abstract class AbstractProcessor {
 
 					}
 				}
-
+				i++;
 			}
 
 			st.close();
@@ -310,7 +311,7 @@ public abstract class AbstractProcessor {
 			records.add(records.size(), relabel);
 		}
 		System.out.println("discogs label size \t" + records.size());
-		System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
+//		System.out.println("Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
 
 		return records;
 

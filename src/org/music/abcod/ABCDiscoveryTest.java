@@ -10,12 +10,13 @@ import java.util.Map;
 
 public class ABCDiscoveryTest {
     public static void main(String[] args) throws Exception {
-        int dataSize = 1000000;
-        double bandWidth = 1.6;
-        String SQL = new ExperimentInput().sfoFlightABCForScalability;
-//        computeBandWidth(SQL, dataSize);
-//        testScalability(SQL, dataSize, bandWidth);
-        analyseSeries(SQL, dataSize, bandWidth);
+        int dataSize = 700000;
+        double bandWidth = 0;
+        String SQL = new ExperimentInput().usFlightForScalability;//sfoFlightABCForMultipleAttributes;//sfoFlightABCForScalability;//usFlightForScalability
+//        computeBandWidth(SQL, dataSize);                                                 +
+        testScalability(SQL, dataSize, bandWidth);
+//        testMultiAttributeScalability(SQL, dataSize, bandWidth);
+//        analyseSeries(SQL, dataSize, bandWidth);
 
     }
 
@@ -195,7 +196,7 @@ public class ABCDiscoveryTest {
 
     public static void testScalability(String sql, int dataSize, double bandWidth) throws Exception {
         int totalSize = dataSize;
-        int partition = 1;
+        int partition = 10;
         int partitionSize = totalSize / partition;
 
         for (int p = 0; p < partition; p++) {
@@ -212,8 +213,38 @@ public class ABCDiscoveryTest {
                     yearSequence[i] = years.get(i);
 //                    System.out.println(years.size()+"\t"+groupId+"\t"+i+"\t"+years.get(i));
                 }
-                if (yearSequence.length > 1000) {
-//                    System.out.println(groupId);
+
+                ABCDiscovery abcDiscovery = new ABCDiscovery();
+
+                int errorThreshold = 4;
+                ArrayList<Integer> series = abcDiscovery.computeSeries(yearSequence, bandWidth, errorThreshold);
+//                System.out.println(series.size());
+            }
+
+            double endSeriesTime = System.currentTimeMillis();
+            double seriesTime = endSeriesTime - startSeriesTime;
+            System.out.println("Series Runtime: \t" + (p + 1) + "\t" + seriesTime);
+        }
+    }
+
+    public static void testMultiAttributeScalability(String sql, int dataSize, double bandWidth) throws Exception {
+        int totalSize = dataSize;
+        int partition = 1;
+        int partitionSize = totalSize / partition;
+
+        for (int p = 0; p < partition; p++) {
+            int subSize = partitionSize * (p + 1);
+            String queryWithDataSize = sql + " limit " + subSize + ";";
+            double startSeriesTime = System.currentTimeMillis();
+            HashMap<String, ArrayList<Double>> groupedYearSequence = new DataLoader().loadMultiAttributeDataForABCDiscovery(queryWithDataSize, subSize);
+
+            for (Map.Entry<String, ArrayList<Double>> indexYearSequence : groupedYearSequence.entrySet()) {
+                String groupId = indexYearSequence.getKey();
+                ArrayList<Double> years = indexYearSequence.getValue();
+                double[] yearSequence = new double[years.size()];
+                for (int i = 0; i < years.size(); i++) {
+                    yearSequence[i] = years.get(i);
+//                    System.out.println(years.size()+"\t"+groupId+"\t"+i+"\t"+years.get(i));
                 }
 
                 ABCDiscovery abcDiscovery = new ABCDiscovery();
@@ -225,7 +256,7 @@ public class ABCDiscoveryTest {
 
             double endSeriesTime = System.currentTimeMillis();
             double seriesTime = endSeriesTime - startSeriesTime;
-            System.out.println("Series Runtime: \t" + subSize + "\t" + seriesTime);
+            System.out.println("Series Runtime: \t" + (p + 1) + "\t" + seriesTime);
         }
     }
 }
