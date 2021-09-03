@@ -36,7 +36,7 @@ public class ABDiscovery {
             int bestPosition2 = binarySearchLeftMostPosition(value + bandWidth, bestIncValues, true);
             incBandLength = Math.max(incBandLength, bestPosition2);
 
-            int bestPosition3 = binarySearchLeftMostPosition(value, bestDecValues, false);
+            int bestPosition3 = Math.max(binarySearchLeftMostPosition(value, bestDecValues, false), 0);
             int bestPosition4 = binarySearchLeftMostPosition(value + bandWidth, bestDecValues, false);
             decBandLength = Math.max(decBandLength, bestPosition4);
 
@@ -62,6 +62,9 @@ public class ABDiscovery {
                 double bestValue = infinityValue;
                 if (k > 1) {
                     bestValue = bestDecValues[k - 1];
+                }
+                if (k >= bestDecValues.length || k < 0) {
+                    System.out.println(k + "\t" + bestDecValues.length + "\t" + bestPosition4 + "\t" + bestPosition3);
                 }
                 bestDecValues[k] = Math.min(bestValue, value);
             }

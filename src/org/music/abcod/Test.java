@@ -6,26 +6,29 @@ import java.util.ArrayList;
 
 public class Test {
 	/**
-	 * Discogs data
-	 */
+     * Discogs data
+     */
 
-	private static String SQL =
-			"select id, date, title as release_1, catno, label as label_name from music.music_release " +
-					"where (date NOT IN (' ', ' ', ' ', ' ') AND date IS NOT NULL) " +
-					"order by label, catno, date limit 1000000";
-	private static String SFO = "select 1 as id, time as date, airline as release_1, concat(airline, flight_number," +
-			" transaction, time_in_hr) as catno, concat(airline, flight_number, transaction) as label_name from music.sfo_flight" +
-			" order by label_name, catno, date limit 1000000";
+    private static String SQL =
+            "select id, date, title as release_1, catno, label as label_name from music.music_release " +
+                    "where (date NOT IN (' ', ' ', ' ', ' ') AND date IS NOT NULL) " +
+                    "order by label, catno, date limit 1000000";
+    private static String SFO = "select 1 as id, time as date, airline as release_1, concat(airline, flight_number," +
+            " transaction, time_in_hr) as catno, concat(airline, flight_number, transaction) as label_name from music.sfo_flight" +
+            " order by label_name, catno, date limit 1000000";
+    private static String US = "select 1 as id, dep_time_in_hr as date, tail_num as release_1, concat(origin, fl_date, dep_time_in_hr) as catno, " +
+            "concat(origin, fl_date) as label_name from music.nationwide_2018_flight " +
+            "order by label_name, crs_dep_time_in_hr, op_carrier_fl_num, origin_airport_id, op_carrier_airline_id,  dep_time_in_hr limit 700000";
 
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-		/*
-		 * partiton records by catalog values, s.t. each partition holds order
-		 * dependency between catalog and year; the result is stored in 3
-		 * arraylist: 1. catalists: contains ordered catalog values of each
-		 * partition 2. timelists: contains ordered years of each partition 3.
-		 * releaselists: contains releaseed sorted in the same order as catalog
-		 * of each partition
+        /*
+         * partiton records by catalog values, s.t. each partition holds order
+         * dependency between catalog and year; the result is stored in 3
+         * arraylist: 1. catalists: contains ordered catalog values of each
+         * partition 2. timelists: contains ordered years of each partition 3.
+         * releaselists: contains releaseed sorted in the same order as catalog
+         * of each partition
 		 */
 
 		// simple series
@@ -62,18 +65,18 @@ public class Test {
 		/**
 		 * Analyse series in sample data
 		 */
-		// analyzeSeries(sql);
-		/**
-		 * Analyse series in music full data
-		 */
-		// analyzeSeries(SQL);
+        // analyzeSeries(sql);
+        /**
+         * Analyse series in music full data
+         */
+        // analyzeSeries(SQL);
 
-		/***
-		 * test scalability
-		 *
-		 */
-		testScalability(SFO);
-	}
+        /***
+         * test scalability
+         *
+         */
+        testScalability(US);
+    }
 
 	public static void testScalability(String sql) throws Exception {
 		PartitionProcessor parProcessor = new PartitionProcessor(sql, "releaselabel");
@@ -92,41 +95,41 @@ public class Test {
 				for (int j = 0; j < subSize; j++) {
 					subDataSet.add(subDataSet.size(), dataset.get(j));
 				}
-				// baseline: gap
-				double start = System.currentTimeMillis();
-				// System.out.println("gap:");
-				parProcessor.partitionWithGap("releaselabel", subDataSet);
-				double endGAP = System.currentTimeMillis();
-				double gapTime = endGAP - start;
-				System.out.println("Gap Runtime: \t" + (i + 1) + "\t" + gapTime);
+                // baseline: gap
+                double start = System.currentTimeMillis();
+                // System.out.println("gap:");
+//				parProcessor.partitionWithGap("releaselabel", subDataSet);
+                double endGAP = System.currentTimeMillis();
+                double gapTime = endGAP - start;
+//				System.out.println("Gap Runtime: \t" + (i + 1) + "\t" + gapTime);
 
-				// blocking
-				// System.out.println("Block:");
-//				parProcessor.block("releaselabel", subDataSet);
+                // blocking
+                // System.out.println("Block:");
+                parProcessor.block("releaselabel", subDataSet);
 
 //				System.out.println("subDataSet size \t" + subDataSet.size());
-				// System.out.println("LMB:");
-				double startLMB = System.currentTimeMillis();
+                // System.out.println("LMB:");
+                double startLMB = System.currentTimeMillis();
 //				parProcessor.series(deltat, theta);
-				double endLMB = System.currentTimeMillis();
-				double lmbTime = endLMB - startLMB;
+                double endLMB = System.currentTimeMillis();
+                double lmbTime = endLMB - startLMB;
 
 //				System.out.println("LMB Runtime: \t" + lmbTime);
 
-				// System.out.println("LMS:");
-				// parProcessor.series(0, theta);
-				double endLMS = System.currentTimeMillis();
-				double lmsTime = endLMS - endLMB;
-				// System.out.println("LMS Runtime: \t" + lmsTime);
+                // System.out.println("LMS:");
+                // parProcessor.series(0, theta);
+                double endLMS = System.currentTimeMillis();
+                double lmsTime = endLMS - endLMB;
+                // System.out.println("LMS Runtime: \t" + lmsTime);
 
 //				 System.out.println("MonoScale:");
-				 /*ScaleProcessor scaleProcessor = new ScaleProcessor(parProcessor.finaltimelists,parProcessor.finalreleaselists, deltat);
-				 scaleProcessor.process();
-				 double endScale = System.currentTimeMillis();
-				 double scaleTime = endScale - start;
-				System.out.println("MonoScale Runtime: \t" + subSize + "\t" + scaleTime);*/
+                ScaleProcessor scaleProcessor = new ScaleProcessor(parProcessor.finaltimelists, parProcessor.finalreleaselists, deltat);
+                scaleProcessor.process();
+                double endScale = System.currentTimeMillis();
+                double scaleTime = endScale - endGAP;
+                System.out.println("MonoScale Runtime: \t" + subSize + "\t" + scaleTime);
 
-			}
+            }
 		}
 	}
 

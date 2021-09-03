@@ -199,24 +199,25 @@ public abstract class AbstractProcessor {
 			int i = 0;
 
 			while (result.next()) {
-				int id = i;//result.getInt("id");
-				String release = result.getString("release_1");
-				// String release = result.getString("release");
-				String genres = "";// result.getString("genres");
-				String styles = "";// result.getString("styles");
-				String country = "";// result.getString("country");
-				String year = result.getString("date");
-				year = parseDateToYear(year);
+                int id = i;//result.getInt("id");
+                String release = result.getString("release_1");
+                // String release = result.getString("release");
+                String genres = "";// result.getString("genres");
+                String styles = "";// result.getString("styles");
+                String country = "";// result.getString("country");
+                String year = result.getString("date");
+                year = parseDateToYear(year);
+                double parsedYear = Double.parseDouble(year);
 
-				String artist = "";// result.getString("artist");
-				String label = result.getString("label_name");
-				String catno = result.getString("catno");
-				catno = cleanCatno(catno);
+                String artist = "";// result.getString("artist");
+                String label = result.getString("label_name");
+                String catno = result.getString("catno");
+                catno = cleanCatno(catno);
 
-				String format = "";// result.getString("format");
-				String qty = "";// result.getString("qty");
-				// format += " "+qty;
-				String description = "";// result.getString("description");
+                String format = "";// result.getString("format");
+                String qty = "";// result.getString("qty");
+                // format += " "+qty;
+                String description = "";// result.getString("description");
 				description = sortStrings(description);
 				// format += " "+description;
 				String extra_artist = "";// result.getString("extra_artist");
@@ -268,33 +269,33 @@ public abstract class AbstractProcessor {
 						 * extra_artists.add(extra_artist);
 						 */
 					} else {
-						ReleaseLabel relabel = new ReleaseLabel();
-						relabel.setId(id);
-						relabel.setRelease(release);
-						relabel.setGenreslist(genreslist);
-						relabel.setStyleslist(stylelist);
-						relabel.setCountry(country);
-						relabel.setDate(Integer.valueOf(year));
-						relabel.setLabel(label);
-						relabel.setStrartist(artist);
-						relabel.setCluster_id(cluster_id);
-						relabel.setStrextrartist(extra_artist);
-						relabel.setFormat(format);
-						relabel.setQty(qty);
-						relabel.setFormat_description(description);
-						relabel.setCatno(catno);
-						relabel.setPartition_id(partition_id);
-						relabel.setNew_date(Integer.valueOf(new_year));
-						// relabel.setNew_country(new_country);
-						// relabel.setNew_release(new_title);
-						// relabel.setNew_label(new_label);
-						// relabel.setNew_catno(new_catno);
-						// relabel.setNew_format(new_format);
-						relabel.setGround_truth(Integer.valueOf(ground_truth));
+                        ReleaseLabel relabel = new ReleaseLabel();
+                        relabel.setId(id);
+                        relabel.setRelease(release);
+                        relabel.setGenreslist(genreslist);
+                        relabel.setStyleslist(stylelist);
+                        relabel.setCountry(country);
+                        relabel.setDate((int) parsedYear); //relabel.setDate(Integer.parseInt(year));
+                        relabel.setLabel(label);
+                        relabel.setStrartist(artist);
+                        relabel.setCluster_id(cluster_id);
+                        relabel.setStrextrartist(extra_artist);
+                        relabel.setFormat(format);
+                        relabel.setQty(qty);
+                        relabel.setFormat_description(description);
+                        relabel.setCatno(catno);
+                        relabel.setPartition_id(partition_id);
+                        relabel.setNew_date(Integer.parseInt(new_year));
+                        // relabel.setNew_country(new_country);
+                        // relabel.setNew_release(new_title);
+                        // relabel.setNew_label(new_label);
+                        // relabel.setNew_catno(new_catno);
+                        // relabel.setNew_format(new_format);
+                        relabel.setGround_truth(Integer.valueOf(ground_truth));
 
-						temp.put(id, relabel);
+                        temp.put(id, relabel);
 
-					}
+                    }
 				}
 				i++;
 			}

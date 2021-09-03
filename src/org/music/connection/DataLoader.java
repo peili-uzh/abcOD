@@ -21,7 +21,7 @@ public class DataLoader {
             while (result.next()) {
                 String groupId = result.getString("group_id");
                 String year = result.getString("time");
-//                year = parseDateToYear(year);
+                year = parseDateToYear(year);
 
 //                System.out.println(groupId+"\t"+year);
 
@@ -107,7 +107,7 @@ public class DataLoader {
                 year = parseDateToYear(year);
 
                 if (!year.equals("0") && i < dataSize) {
-                    musicYearSequence[i] = Double.valueOf(year);
+                    musicYearSequence[i] = Double.parseDouble(year);
                     i = i + 1;
                 }
             }
@@ -116,6 +116,7 @@ public class DataLoader {
         }
 
         ConnectionPool.putConnection(con);
+//        System.out.println("dataset size:\t"+i);
 
 //        System.out.println("discogs label size \t" + musicYearSequence.length);
 //        System.out.println("after loading Memory in MB: " + (double) (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));

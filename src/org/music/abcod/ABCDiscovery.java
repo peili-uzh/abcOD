@@ -8,6 +8,74 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ABCDiscovery {
+    public ArrayList<Integer> computeSeriesWithoutPiece(double[] input, double bandWidth, int errorThreshold) {
+        ArrayList<Integer> pieceBoundaries = new ArrayList<>();
+        for (int i = 0; i <= input.length; i++) {
+            pieceBoundaries.add(i);
+        }
+
+        ArrayList<Integer> seriesBoundaries = new ArrayList<>();
+//        if(input.length>1000){
+//            System.out.println(input.length+"\t"+pieceBoundaries.size());
+//        }
+
+        double[] gains = new double[pieceBoundaries.size()];
+        int[] seriesIndices = new int[pieceBoundaries.size()];
+
+        for (int i = 0; i < pieceBoundaries.size(); i++) {
+            gains[i] = 0;
+        }
+
+        for (int j = 0; j < pieceBoundaries.size() - 1; j++) {
+            int startIndex = pieceBoundaries.get(j);
+            int endIndex = pieceBoundaries.get(j + 1);
+            int pieceLength = endIndex - startIndex;
+
+            if (j == 0) {
+                double gain = Math.pow(pieceLength, 2);
+                gains[j] = gain;
+                seriesIndices[j] = j;
+            } else {
+                for (int i = 0; i <= j; i++) {
+                    int subSequenceLength = endIndex - pieceBoundaries.get(i);
+                    double[] subSequence = new double[subSequenceLength];
+                    System.arraycopy(input, pieceBoundaries.get(i), subSequence, 0, subSequenceLength);
+                    Outlier outlier = new Outlier();
+
+                    int[] lmb = new ABDiscovery().computeLMB(subSequence, bandWidth, outlier);
+
+                    double gain = Math.pow(lmb.length, 2) - Math.pow((subSequenceLength - lmb.length), 2);
+                    if (outlier.getMaxOutlierCount() <= errorThreshold) {
+                        double currentGain = gains[j];
+                        double accumulatedGain = 0;
+                        if (i > 0) {
+                            accumulatedGain = gains[i - 1];
+                        }
+                        double candidateGain = accumulatedGain + gain;
+                        if (candidateGain > currentGain) {
+                            gains[j] = candidateGain;
+                            seriesIndices[j] = i;
+                        }
+                    }
+                }
+
+            }
+        }
+
+
+        int index = seriesIndices.length - 2;
+//        seriesBoundaries.add(input.length);
+        while (index >= 0) {
+            int inputIndex = pieceBoundaries.get(seriesIndices[index]);
+            index = seriesIndices[index] - 1;
+//            System.out.println("\t\t"+inputIndex);
+            seriesBoundaries.add(inputIndex);
+        }
+//        seriesBoundaries.add(0);
+
+        return seriesBoundaries;
+    }
+
     public ArrayList<Integer> computeSeries(double[] input, double bandWidth, int errorThreshold) {
         ArrayList<Integer> pieceBoundaries = generatePieces(input, bandWidth);
 //                for(int piece: pieceBoundaries){

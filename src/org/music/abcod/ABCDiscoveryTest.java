@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class ABCDiscoveryTest {
     public static void main(String[] args) throws Exception {
-        int dataSize = 700000;
+        int dataSize = 1000000;
         double bandWidth = 0;
-        String SQL = new ExperimentInput().usFlightForScalability;//sfoFlightABCForMultipleAttributes;//sfoFlightABCForScalability;//usFlightForScalability
+        String SQL = new ExperimentInput().musicABCForScalability;//sfoFlightABCForMultipleAttributes;//sfoFlightABCForScalability;//usFlightForScalability
 //        computeBandWidth(SQL, dataSize);                                                 +
         testScalability(SQL, dataSize, bandWidth);
 //        testMultiAttributeScalability(SQL, dataSize, bandWidth);
@@ -199,7 +199,7 @@ public class ABCDiscoveryTest {
         int partition = 10;
         int partitionSize = totalSize / partition;
 
-        for (int p = 0; p < partition; p++) {
+        for (int p = 2; p < partition; p++) {
             int subSize = partitionSize * (p + 1);
             String queryWithDataSize = sql + " limit " + subSize + ";";
             HashMap<String, ArrayList<Double>> groupedYearSequence = new DataLoader().loadDataForABCDiscovery(queryWithDataSize, subSize);
@@ -217,7 +217,9 @@ public class ABCDiscoveryTest {
                 ABCDiscovery abcDiscovery = new ABCDiscovery();
 
                 int errorThreshold = 4;
-                ArrayList<Integer> series = abcDiscovery.computeSeries(yearSequence, bandWidth, errorThreshold);
+                ArrayList<Integer> series = abcDiscovery.computeSeriesWithoutPiece(yearSequence, bandWidth, errorThreshold);
+//                ArrayList<Integer> series = abcDiscovery.computeSeries(yearSequence, bandWidth, errorThreshold);
+
 //                System.out.println(series.size());
             }
 
