@@ -1,0 +1,26 @@
+-- Table: music.nationwide_2018_flight
+
+-- DROP TABLE music.nationwide_2018_flight;
+
+CREATE TABLE IF NOT EXISTS music.nationwide_2018_flight
+(
+    fl_date character varying COLLATE pg_catalog."default",
+    op_carrier_airline_id integer,
+    tail_num character varying COLLATE pg_catalog."default",
+    op_carrier_fl_num integer,
+    origin_airport_id integer,
+    origin_airport_seq_id integer,
+    orgin_city_market_id integer,
+    origin character varying COLLATE pg_catalog."default",
+    dest_airport_id integer,
+    dest_airport_seq_id integer,
+    dest_city_market_id integer,
+    dest character varying COLLATE pg_catalog."default",
+    crs_dep_time_in_hr double precision,
+    dep_time_in_hr double precision
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE music.nationwide_2018_flight
+    OWNER to pei;

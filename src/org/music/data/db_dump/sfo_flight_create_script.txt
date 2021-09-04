@@ -1,0 +1,28 @@
+-- Table: music.sfo_flight
+
+-- DROP TABLE music.sfo_flight;
+
+CREATE TABLE IF NOT EXISTS music.sfo_flight
+(
+    airline character varying COLLATE pg_catalog."default",
+    flight_number character varying COLLATE pg_catalog."default",
+    transaction character varying COLLATE pg_catalog."default",
+    terminal character varying COLLATE pg_catalog."default",
+    gate character varying COLLATE pg_catalog."default",
+    remark character varying COLLATE pg_catalog."default",
+    date character varying COLLATE pg_catalog."default",
+    year integer,
+    month integer,
+    day integer,
+    "time" character varying COLLATE pg_catalog."default",
+    hr integer,
+    minute integer,
+    time_in_hr double precision,
+    time_in_sec bigint,
+    id integer
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE music.sfo_flight
+    OWNER to pei;
